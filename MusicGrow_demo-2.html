@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎵 MusicGrow - 音楽教室 成長記録 デモ</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0a0a1e; font-family: 'Hiragino Sans', 'Noto Sans JP', 'Yu Gothic', sans-serif; color: #e8e8f0; }
+  input, select, textarea, button { font-family: inherit; }
+  input[type=range] { accent-color: #6ee7b7; }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: #0a0a1e; }
+  ::-webkit-scrollbar-thumb { background: #2a2a4a; border-radius: 4px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback } = React;
+
+const STORAGE_KEY = "musicgrow-demo-v1";
+function loadData() {
+  try { const d = localStorage.getItem(STORAGE_KEY); return d ? JSON.parse(d) : null; } catch { return null; }
+}
+function saveData(data) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch {}
+}
+
+const INSTRUMENT_TEMPLATES = {
+  ピアノ:    [{key:"pitch",label:"音程"},{key:"rhythm",label:"リズム"},{key:"sight",label:"読譜"},{key:"expression",label:"表現"},{key:"posture",label:"姿勢"}],
+  バイオリン: [{key:"pitch",label:"音程"},{key:"bowing",label:"ボウイング"},{key:"tone",label:"音色"},{key:"posture",label:"姿勢"},{key:"expression",label:"表現"}],
+  管楽器:    [{key:"pitch",label:"音程"},{key:"tonguing",label:"タンギング"},{key:"tone",label:"音色"},{key:"breath",label:"呼吸"},{key:"expression",label:"表現"}],
+  ボーカル:  [{key:"pitch",label:"音程"},{key:"rhythm",label:"リズム"},{key:"voice",label:"発声"},{key:"diction",label:"発音"},{key:"expression",label:"表現"}],
+  ギター:    [{key:"pitch",label:"音程"},{key:"rhythm",label:"リズム"},{key:"tone",label:"音色"},{key:"posture",label:"姿勢"},{key:"expression",label:"表現"}],
+  チェロ:    [{key:"pitch",label:"音程"},{key:"bowing",label:"ボウイング"},{key:"tone",label:"音色"},{key:"posture",label:"姿勢"},{key:"expression",label:"表現"}],
+  フルート:  [{key:"pitch",label:"音程"},{key:"tone",label:"音色"},{key:"breath",label:"呼吸"},{key:"posture",label:"姿勢"},{key:"expression",label:"表現"}],
+  その他:    [{key:"rhythm",label:"リズム"},{key:"tone",label:"音色"},{key:"expression",label:"表現"},{key:"posture",label:"姿勢"},{key:"attitude",label:"取り組み"}],
+};
+const VIDEO_ITEMS = [{key:"overall",label:"総合"},{key:"technique",label:"テクニック"},{key:"musicality",label:"音楽性"},{key:"presence",label:"存在感"}];
+const MOODS = ["😫","😕","😐","🙂","😄"];
+const INSTRUMENTS = Object.keys(INSTRUMENT_TEMPLATES);
+
+const INITIAL_DATA = {
+  students: [
+    {id:"s1",name:"田中さくら",instrument:"ピアノ",since:"2023-04"},
+    {id:"s2",name:"鈴木ひろと",instrument:"バイオリン",since:"2023-09"},
+  ],
+  lessons: [
+    {id:"l1",studentId:"s1",date:"2025-01-10",song:"ソナタ Op.13",scores:{pitch:4,rhythm:4,sight:3,expression:3,posture:5},comment:"リズムが安定してきました。表現力をさらに意識して。"},
+    {id:"l2",studentId:"s1",date:"2025-02-07",song:"ソナタ Op.13",scores:{pitch:4,rhythm:4,sight:4,expression:4,posture:5},comment:"表現力が上がりました！次回は強弱を意識しましょう。"},
+    {id:"l3",studentId:"s1",date:"2025-03-14",song:"革命のエチュード",scores:{pitch:4,rhythm:3,sight:4,expression:4,posture:4},comment:"新曲に挑戦！テンポキープが今後の課題です。"},
+    {id:"l4",studentId:"s2",date:"2025-01-15",song:"バッハ ドッペルコンチェルト",scores:{pitch:3,bowing:3,tone:3,posture:4,expression:2},comment:"基礎が固まってきた。音色の豊かさを意識して。"},
+    {id:"l5",studentId:"s2",date:"2025-02-19",song:"バッハ ドッペルコンチェルト",scores:{pitch:4,bowing:4,tone:4,posture:4,expression:3},comment:"音色が改善。表現の幅を広げていきましょう。"},
+  ],
+  videoReviews: [
+    {id:"v1",studentId:"s1",month:"2025-01",song:"ソナタ Op.13",scores:{overall:4,technique:3,musicality:4,presence:3},comment:"全体的にまとまってきた。さらなる深みに期待！"},
+    {id:"v2",studentId:"s1",month:"2025-02",song:"ソナタ Op.13",scores:{overall:4,technique:4,musicality:4,presence:4},comment:"素晴らしい成長！本番でもこの調子で。"},
+    {id:"v3",studentId:"s2",month:"2025-01",song:"バッハ",scores:{overall:3,technique:3,musicality:3,presence:3},comment:"着実に進歩しています。"},
+  ],
+  practices: [
+    {id:"p1",studentId:"s1",date:"2025-03-25",minutes:30,content:"革命のエチュード 右手練習",mood:3,note:"だいぶ慣れてきた"},
+    {id:"p2",studentId:"s1",date:"2025-03-26",minutes:45,content:"革命のエチュード 両手合わせ",mood:4,note:""},
+    {id:"p3",studentId:"s1",date:"2025-03-28",minutes:20,content:"ハノン + ソナタ復習",mood:2,note:"疲れてたけど頑張った"},
+    {id:"p4",studentId:"s2",date:"2025-03-27",minutes:30,content:"ドッペルコンチェルト 1楽章",mood:3,note:""},
+  ],
+  homeworks: [
+    {id:"h1",studentId:"s1",setDate:"2025-03-14",dueDate:"2025-04-11",task:"右手だけでテンポ60まで弾けるようにする",done:false},
+    {id:"h2",studentId:"s1",setDate:"2025-03-14",dueDate:"2025-04-11",task:"8小節を止まらず通す",done:false},
+    {id:"h3",studentId:"s2",setDate:"2025-02-19",dueDate:"2025-03-19",task:"ロングトーン毎日3分",done:true},
+  ],
+};
+
+function avg(scores) {
+  const v = Object.values(scores).filter(x=>typeof x==="number");
+  return v.length ? v.reduce((a,b)=>a+b,0)/v.length : 0;
+}
+function getStreak(practices, studentId) {
+  const dates=[...new Set(practices.filter(p=>p.studentId===studentId).map(p=>p.date))].sort().reverse();
+  if(!dates.length) return 0;
+  let streak=0, cur=new Date(); cur.setHours(0,0,0,0);
+  for(const d of dates){const pd=new Date(d);const diff=Math.round((cur-pd)/86400000);if(diff<=1){streak++;cur=pd;}else break;}
+  return streak;
+}
+function getTotalMinutes(practices, studentId) {
+  return practices.filter(p=>p.studentId===studentId).reduce((a,p)=>a+p.minutes,0);
+}
+
+function StarRating({value,onChange,size=22}){
+  return (
+    <div style={{display:"flex",gap:3}}>
+      {[1,2,3,4,5].map(s=>(
+        <span key={s} onClick={()=>onChange&&onChange(s)}
+          style={{fontSize:size,cursor:onChange?"pointer":"default",color:s<=value?"#f4b942":"#2e2e42",transition:"color .12s",userSelect:"none"}}>★</span>
+      ))}
+    </div>
+  );
+}
+
+function RadarChart({scores,items,size=180}){
+  const n=items.length,cx=size/2,cy=size/2,r=size*0.35;
+  const angle=i=>Math.PI*2*i/n-Math.PI/2;
+  const pt=(i,v)=>({x:cx+r*(v/5)*Math.cos(angle(i)),y:cy+r*(v/5)*Math.sin(angle(i))});
+  const grid=lv=>items.map((_,i)=>{const p=pt(i,lv);return `${p.x},${p.y}`;}).join(" ");
+  const data=items.map((it,i)=>{const p=pt(i,scores[it.key]||0);return `${p.x},${p.y}`;}).join(" ");
+  return (
+    <svg width={size} height={size}>
+      {[1,2,3,4,5].map(lv=><polygon key={lv} points={grid(lv)} fill="none" stroke="#252538" strokeWidth="1"/>)}
+      {items.map((_,i)=>{const p=pt(i,5);return <line key={i} x1={cx} y1={cy} x2={p.x} y2={p.y} stroke="#252538" strokeWidth="1"/>;} )}
+      <polygon points={data} fill="#6ee7b7" fillOpacity="0.28" stroke="#6ee7b7" strokeWidth="2"/>
+      {items.map((it,i)=>{const lp=pt(i,6.3);return <text key={i} x={lp.x} y={lp.y} textAnchor="middle" dominantBaseline="middle" style={{fontSize:10,fill:"#8888aa"}}>{it.label}</text>;})}
+    </svg>
+  );
+}
+
+function LineChart({data,labels}){
+  if(data.length<2) return <div style={{color:"#444",fontSize:12,padding:"8px 0"}}>レッスンが2回以上になると表示されます</div>;
+  const w=270,h=80,pad=14;
+  const xStep=(w-pad*2)/(data.length-1);
+  const yScale=v=>pad+((5-v)/5)*(h-pad*2);
+  const pts=data.map((v,i)=>`${pad+i*xStep},${yScale(v)}`).join(" ");
+  return (
+    <svg width={w} height={h} style={{overflow:"visible"}}>
+      {[1,2,3,4,5].map(lv=><line key={lv} x1={pad} y1={yScale(lv)} x2={w-pad} y2={yScale(lv)} stroke="#1e1e32" strokeWidth="1"/>)}
+      <polyline points={pts} fill="none" stroke="#6ee7b7" strokeWidth="2.5" strokeLinejoin="round"/>
+      {data.map((v,i)=><circle key={i} cx={pad+i*xStep} cy={yScale(v)} r="4" fill="#6ee7b7"/>)}
+      {labels&&data.map((_,i)=><text key={i} x={pad+i*xStep} y={h+10} textAnchor="middle" style={{fontSize:9,fill:"#555"}}>{labels[i]}</text>)}
+    </svg>
+  );
+}
+
+function PracticeCalendar({practices}){
+  const days=[];
