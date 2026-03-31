@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>🎵 MusicGrow - 音楽教室 成長記録</title>
+<title>🎵 MusicGrow</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:#0a0a1e;font-family:'Hiragino Sans','Noto Sans JP','Yu Gothic',sans-serif;color:#e8e8f0;min-height:100vh;}
@@ -20,16 +20,15 @@ input,select,textarea,button{font-family:inherit;}
 .section-title{font-size:18px;font-weight:700;color:#e8e8f0;margin-bottom:16px;}
 .inp{width:100%;background:#0a0a1e;border:1px solid #252540;border-radius:8px;padding:8px 10px;color:#e8e8f0;font-size:14px;outline:none;}
 .inp::placeholder{color:#444;}
-textarea.inp{height:60px;resize:none;}
+textarea.inp{height:70px;resize:none;}
 .btn{background:#6ee7b7;color:#0a0a1e;border:none;border-radius:8px;padding:10px 20px;font-weight:700;font-size:14px;cursor:pointer;width:100%;margin-top:10px;}
 .btn-red{background:#f87171;}
+.btn-orange{background:#fb923c;}
+.btn-purple{background:#a78bfa;color:#0a0a1e;}
 .back-btn{background:none;border:none;color:#6ee7b7;font-size:14px;cursor:pointer;padding:0 0 14px 0;}
 .chip-btn{background:#0a0a1e;border:1px solid #252540;border-radius:6px;padding:4px 10px;color:#a0a0c0;font-size:12px;cursor:pointer;}
 .chip-btn.active{background:#6ee7b7;color:#0a0a1e;}
 .row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
-.stars span{font-size:22px;cursor:pointer;color:#2e2e42;user-select:none;}
-.stars span.on{color:#f4b942;}
-.stars-sm span{font-size:14px;}
 .stat-bar{display:flex;gap:8px;margin-bottom:18px;}
 .stat-box{flex:1;background:#111126;border:1px solid #1e1e38;border-radius:12px;padding:10px 6px;text-align:center;}
 .stat-val{font-size:17px;font-weight:800;color:#6ee7b7;}
@@ -62,25 +61,70 @@ textarea.inp{height:60px;resize:none;}
 .bpm-num{font-size:52px;font-weight:800;color:#e8e8f0;text-align:center;line-height:1;}
 .bpm-lbl{color:#555;font-size:12px;text-align:center;margin-bottom:14px;}
 input[type=range]{width:100%;accent-color:#6ee7b7;margin-bottom:14px;}
-/* SVG charts */
 svg text{font-family:'Hiragino Sans','Noto Sans JP',sans-serif;}
+/* Timer */
+.timer-big{font-size:56px;font-weight:800;color:#e8e8f0;text-align:center;line-height:1;margin:16px 0 4px;}
+.sound-bar{height:8px;border-radius:4px;background:#1e1e32;margin:10px 0;overflow:hidden;}
+.sound-fill{height:100%;border-radius:4px;background:#6ee7b7;transition:width .1s;}
+/* Stamp */
+.stamp-grid{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0;}
+.stamp{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid #2a2a4a;background:#0a0a1e;}
+.stamp.filled{background:#1e1e38;border-color:#f4b942;transform:rotate(-8deg);}
+/* Progress */
+.prog-bar{height:12px;border-radius:6px;background:#1e1e32;margin:8px 0;overflow:hidden;}
+.prog-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#6ee7b7,#34d399);transition:width .5s;}
+.milestone{display:flex;justify-content:space-between;font-size:11px;color:#555;margin-top:4px;}
+/* AI / Karaoke */
+.spinner{width:48px;height:48px;border:4px solid #1e1e38;border-top:4px solid #6ee7b7;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 20px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes pop{0%{transform:scale(0);}60%{transform:scale(1.2);}100%{transform:scale(1);}}
+.waveform{display:flex;align-items:center;gap:2px;justify-content:center;margin:12px 0;height:40px;}
+.waveform-bar{width:4px;border-radius:2px;background:#6ee7b7;animation:wave 1.2s ease-in-out infinite;}
+.waveform-bar:nth-child(2){animation-delay:.1s;height:60%;}
+.waveform-bar:nth-child(3){animation-delay:.2s;height:90%;}
+.waveform-bar:nth-child(4){animation-delay:.3s;height:70%;}
+.waveform-bar:nth-child(5){animation-delay:.4s;height:100%;}
+.waveform-bar:nth-child(6){animation-delay:.3s;height:80%;}
+.waveform-bar:nth-child(7){animation-delay:.2s;height:60%;}
+.waveform-bar:nth-child(8){animation-delay:.1s;height:40%;}
+@keyframes wave{0%,100%{transform:scaleY(0.5);}50%{transform:scaleY(1);}}
+/* Karaoke score */
+.karaoke-score{font-size:72px;font-weight:900;text-align:center;background:linear-gradient(135deg,#f4b942,#fb923c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;margin:10px 0;}
+.score-diff{font-size:16px;text-align:center;font-weight:700;margin-bottom:8px;}
+.score-diff.up{color:#6ee7b7;}
+.score-diff.down{color:#f87171;}
+.score-diff.same{color:#777;}
+.score-bar-wrap{margin:8px 0;}
+.score-bar-label{display:flex;justify-content:space-between;font-size:11px;color:#777;margin-bottom:3px;}
+.score-bar-bg{height:6px;border-radius:3px;background:#1e1e32;overflow:hidden;}
+.score-bar-fill{height:100%;border-radius:3px;transition:width 1s ease;}
+.keyword-tags{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;}
+.keyword-tag{background:#1a1a2e;border:1px solid #3a3a5a;border-radius:20px;padding:4px 12px;font-size:12px;color:#a0a0c0;}
+/* Plan badge */
+.plan-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;margin-left:6px;}
+.plan-free{background:#1e1e32;color:#777;}
+.plan-pro{background:#a78bfa;color:#0a0a1e;}
+/* Toggle switch */
+.toggle-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;}
+.toggle{position:relative;width:44px;height:24px;}
+.toggle input{opacity:0;width:0;height:0;}
+.toggle-slider{position:absolute;cursor:pointer;inset:0;background:#1e1e32;border-radius:24px;transition:.3s;}
+.toggle-slider:before{position:absolute;content:"";height:18px;width:18px;left:3px;bottom:3px;background:#555;border-radius:50%;transition:.3s;}
+.toggle input:checked+.toggle-slider{background:#6ee7b7;}
+.toggle input:checked+.toggle-slider:before{transform:translateX(20px);background:#0a0a1e;}
 </style>
 </head>
 <body>
 <div class="header">
-  <div><div class="logo">🎵 MusicGrow</div><div class="logo-sub">音楽教室 成長記録 — デモ版</div></div>
+  <div><div class="logo">🎵 MusicGrow</div><div class="logo-sub">音楽教室 成長記録</div></div>
   <div class="tab-bar">
     <button class="tab-btn active" onclick="switchMode('teacher')">🎓 先生</button>
     <button class="tab-btn" onclick="switchMode('student')">🎵 生徒</button>
   </div>
 </div>
 <div class="content" id="app"></div>
-
 <script>
-// ============================================================
-// Data
-// ============================================================
-const SK = 'musicgrow-v1';
+const SK='musicgrow-v4';
 function load(){try{const d=localStorage.getItem(SK);return d?JSON.parse(d):null;}catch{return null;}}
 function save(d){try{localStorage.setItem(SK,JSON.stringify(d));}catch{}}
 
@@ -97,23 +141,26 @@ const TEMPLATES={
 const VIDEO_ITEMS=[{k:'overall',l:'総合'},{k:'technique',l:'テクニック'},{k:'musicality',l:'音楽性'},{k:'presence',l:'存在感'}];
 const MOODS=['😫','😕','😐','🙂','😄'];
 const INSTRUMENTS=Object.keys(TEMPLATES);
+const STAMP_PER_CARD=20;
+const MINS_PER_STAMP=15; // 15分で1スタンプ
+const GOAL_HOURS=1000;
 
-let DB = load() || {
+let DB=load()||{
   students:[
-    {id:'s1',name:'田中さくら',instrument:'ピアノ',since:'2023-04'},
-    {id:'s2',name:'鈴木ひろと',instrument:'バイオリン',since:'2023-09'},
+    {id:'s1',name:'田中さくら',instrument:'ピアノ',since:'2023-04',plan:'pro'},
+    {id:'s2',name:'鈴木ひろと',instrument:'バイオリン',since:'2023-09',plan:'free'},
   ],
   lessons:[
-    {id:'l1',sid:'s1',date:'2025-01-10',song:'ソナタ Op.13',scores:{pitch:4,rhythm:4,sight:3,expression:3,posture:5},comment:'リズムが安定してきました。表現力をさらに意識して。'},
-    {id:'l2',sid:'s1',date:'2025-02-07',song:'ソナタ Op.13',scores:{pitch:4,rhythm:4,sight:4,expression:4,posture:5},comment:'表現力が上がりました！次回は強弱を意識しましょう。'},
-    {id:'l3',sid:'s1',date:'2025-03-14',song:'革命のエチュード',scores:{pitch:4,rhythm:3,sight:4,expression:4,posture:4},comment:'新曲に挑戦！テンポキープが今後の課題です。'},
-    {id:'l4',sid:'s2',date:'2025-01-15',song:'バッハ ドッペルコンチェルト',scores:{pitch:3,bowing:3,tone:3,posture:4,expression:2},comment:'基礎が固まってきた。音色の豊かさを意識して。'},
-    {id:'l5',sid:'s2',date:'2025-02-19',song:'バッハ ドッペルコンチェルト',scores:{pitch:4,bowing:4,tone:4,posture:4,expression:3},comment:'音色が改善。表現の幅を広げていきましょう。'},
+    {id:'l1',sid:'s1',date:'2025-01-10',advice:'リズムが安定してきました。表現力をさらに意識して。'},
+    {id:'l2',sid:'s1',date:'2025-02-07',advice:'表現力が上がりました！次回は強弱を意識しましょう。'},
+    {id:'l3',sid:'s1',date:'2025-03-14',advice:'新曲に挑戦！テンポキープが今後の課題です。'},
+    {id:'l4',sid:'s2',date:'2025-01-15',advice:'基礎が固まってきた。音色の豊かさを意識して。'},
   ],
-  videos:[
-    {id:'v1',sid:'s1',month:'2025-01',song:'ソナタ Op.13',scores:{overall:4,technique:3,musicality:4,presence:3},comment:'全体的にまとまってきた。さらなる深みに期待！'},
-    {id:'v2',sid:'s1',month:'2025-02',song:'ソナタ Op.13',scores:{overall:4,technique:4,musicality:4,presence:4},comment:'素晴らしい成長！本番でもこの調子で。'},
-    {id:'v3',sid:'s2',month:'2025-01',song:'バッハ',scores:{overall:3,technique:3,musicality:3,presence:3},comment:'着実に進歩しています。'},
+  aiScores:[
+    {id:'a1',sid:'s1',date:'2025-03-25',score:742,breakdown:{expression:88,accuracy:76,focus:82},advice:'音の粒立ちが改善！右手のコントロールが向上しました。',keywords:['#テンポキープ','#右手強化']},
+    {id:'a2',sid:'s1',date:'2025-03-26',score:798,breakdown:{expression:92,accuracy:81,focus:90},advice:'前回より大幅アップ！集中力が素晴らしかったです。',keywords:['#集中力','#連続練習の成果']},
+    {id:'a3',sid:'s1',date:'2025-03-28',score:771,breakdown:{expression:85,accuracy:78,focus:88},advice:'安定した演奏でした。表現の幅をさらに広げましょう。',keywords:['#安定感','#表現力アップ']},
+    {id:'a4',sid:'s2',date:'2025-03-27',score:654,breakdown:{expression:74,accuracy:68,focus:79},advice:'ボウイングが改善されています！この調子で続けましょう。',keywords:['#ボウイング','#着実な成長']},
   ],
   practices:[
     {id:'p1',sid:'s1',date:'2025-03-25',minutes:30,content:'革命のエチュード 右手練習',mood:3,note:'だいぶ慣れてきた'},
@@ -126,105 +173,252 @@ let DB = load() || {
     {id:'h2',sid:'s1',setDate:'2025-03-14',dueDate:'2025-04-11',task:'8小節を止まらず通す',done:false},
     {id:'h3',sid:'s2',setDate:'2025-02-19',dueDate:'2025-03-19',task:'ロングトーン毎日3分',done:true},
   ],
+  settings:{showScore:true},
 };
 
-// ============================================================
-// State
-// ============================================================
-let mode='teacher';
-let tView='list'; // teacher: list | detail
-let sView='home'; // student: home | dash | tab
-let selStudent=null;
-let sTab='home';
-let tTab='lesson';
-// Forms
-let lf={date:today(),song:'',scores:{},comment:''};
-let vf={month:todayMonth(),song:'',scores:{overall:3,technique:3,musicality:3,presence:3},comment:''};
+let mode='teacher',tView='list',sView='home',selStudent=null,sTab='home',tTab='lesson';
+let lf={date:today(),advice:''};
 let hw={task:'',dueDate:''};
 let pf={date:today(),minutes:30,content:'',mood:3,note:''};
-let newName='',newInst='ピアノ';
-// Metronome
+let newName='',newInst='ピアノ',newPlan='free';
 let metro={bpm:80,playing:false,beat:0,bpb:4,interval:null,ctx:null};
+let audioTimer={active:false,analyzing:false,showReport:false,reportData:null,seconds:0,soundLevel:0,interval:null,stream:null,audioCtx:null,analyser:null,dataArray:null,prevStamps:0};
+let karaokeAnim=null;
 
 function today(){return new Date().toISOString().slice(0,10);}
 function todayMonth(){return new Date().toISOString().slice(0,7);}
 function uid(){return Date.now().toString(36);}
-function avg(scores){const v=Object.values(scores).filter(x=>typeof x==='number');return v.length?v.reduce((a,b)=>a+b,0)/v.length:0;}
-function getStreak(sid){
-  const dates=[...new Set(DB.practices.filter(p=>p.sid===sid).map(p=>p.date))].sort().reverse();
-  if(!dates.length)return 0;
-  let streak=0,cur=new Date();cur.setHours(0,0,0,0);
-  for(const d of dates){const pd=new Date(d);const diff=Math.round((cur-pd)/86400000);if(diff<=1){streak++;cur=pd;}else break;}
-  return streak;
-}
+function avg(o){const v=Object.values(o).filter(x=>typeof x==='number');return v.length?v.reduce((a,b)=>a+b,0)/v.length:0;}
+function getStreak(sid){const dates=[...new Set(DB.practices.filter(p=>p.sid===sid).map(p=>p.date))].sort().reverse();if(!dates.length)return 0;let s=0,cur=new Date();cur.setHours(0,0,0,0);for(const d of dates){const pd=new Date(d);const diff=Math.round((cur-pd)/86400000);if(diff<=1){s++;cur=pd;}else break;}return s;}
 function getTotalMin(sid){return DB.practices.filter(p=>p.sid===sid).reduce((a,p)=>a+p.minutes,0);}
 function tmpl(inst){return TEMPLATES[inst]||TEMPLATES['その他'];}
 function initScores(inst){return tmpl(inst).reduce((a,it)=>({...a,[it.k]:3}),{});}
+function getStamps(sid){const total=getTotalMin(sid)+(audioTimer.active&&selStudent&&selStudent.id===sid?Math.floor(audioTimer.seconds/60):0);return Math.floor(total/MINS_PER_STAMP);}
+
+// AI score generator (mock)
+function generateAIScore(instrument){
+  const rnd=(a,b)=>Math.floor(a+Math.random()*(b-a));
+  const breakdown={expression:rnd(70,95),accuracy:rnd(65,92),focus:rnd(72,96)};
+  const score=Math.floor((breakdown.expression*0.35+breakdown.accuracy*0.35+breakdown.focus*0.3)*10.5);
+  const advices={
+    ピアノ:['音の粒立ちが改善されています！右手のコントロールが向上しました。','テンポの安定感が増してきました。左手の音量バランスも意識してみましょう。','集中した練習でした！フレーズの歌い方がより自然になっています。'],
+    バイオリン:['ボウイングの圧力が安定してきました！音色に温かみが出ています。','音程の精度が向上しています。ポジション移動をさらに磨きましょう。','弓の使い方が自然になってきました。表現の幅が広がっています！'],
+    管楽器:['ブレスのタイミングが改善されました！フレーズの流れが自然です。','タンギングのキレが増しています。この調子で続けましょう！','音の立ち上がりが鋭くなりました。集中した練習の成果が出ています。'],
+    ボーカル:['声の芯がしっかりしてきました！高音域での安定感が増しています。','フレーズの流れが自然になってきました。母音の形を意識してみましょう。','声量のコントロールが上達しています。表現力がアップしました！'],
+  };
+  const kwds={ピアノ:['#音の粒立ち','#テンポキープ','#右手強化','#表現力アップ','#集中力'],バイオリン:['#ボウイング','#音程精度','#ポジション移動','#音色改善'],管楽器:['#ブレス','#タンギング','#フレーズ感','#集中'],ボーカル:['#声の芯','#高音安定','#母音','#表現力']};
+  const al=advices[instrument]||advices['ピアノ'];
+  const kl=kwds[instrument]||kwds['ピアノ'];
+  const keywords=[kl[Math.floor(Math.random()*kl.length)],kl[Math.floor(Math.random()*kl.length)]].filter((v,i,a)=>a.indexOf(v)===i);
+  return {score,breakdown,advice:al[Math.floor(Math.random()*al.length)],keywords};
+}
 
 // ============================================================
-// Render
+// Audio Timer
+// ============================================================
+async function startAudioTimer(){
+  try{
+    audioTimer.stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    audioTimer.audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    const source=audioTimer.audioCtx.createMediaStreamSource(audioTimer.stream);
+    audioTimer.analyser=audioTimer.audioCtx.createAnalyser();
+    audioTimer.analyser.fftSize=256;
+    source.connect(audioTimer.analyser);
+    audioTimer.dataArray=new Uint8Array(audioTimer.analyser.frequencyBinCount);
+    audioTimer.active=true;
+    audioTimer.prevStamps=getStamps(selStudent.id);
+    audioTimer.interval=setInterval(()=>{
+      audioTimer.analyser.getByteFrequencyData(audioTimer.dataArray);
+      const vol=audioTimer.dataArray.reduce((a,b)=>a+b,0)/audioTimer.dataArray.length;
+      audioTimer.soundLevel=Math.min(100,vol*4);
+      if(vol>12)audioTimer.seconds++;
+      const te=document.getElementById('timer-display');
+      if(te){const m=Math.floor(audioTimer.seconds/60),s=audioTimer.seconds%60;te.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;}
+      const se=document.getElementById('sound-fill');
+      if(se)se.style.width=audioTimer.soundLevel+'%';
+      const de=document.getElementById('detecting-txt');
+      if(de)de.textContent=audioTimer.soundLevel>20?'🎵 音を検知中...':'🎤 待機中...';
+      const curStamps=getStamps(selStudent.id);
+      if(curStamps>audioTimer.prevStamps){audioTimer.prevStamps=curStamps;showStampToast();}
+    },1000);
+    r();
+  }catch(e){alert('マイクへのアクセスを許可してください');}
+}
+
+function stopAudioTimer(){
+  clearInterval(audioTimer.interval);
+  if(audioTimer.stream)audioTimer.stream.getTracks().forEach(t=>t.stop());
+  if(audioTimer.audioCtx)audioTimer.audioCtx.close();
+  const secs=audioTimer.seconds;
+  const inst=selStudent?selStudent.instrument:'ピアノ';
+  if(secs>10&&selStudent){
+    const mins=Math.max(1,Math.floor(secs/60));
+    DB.practices.push({id:uid(),sid:selStudent.id,date:today(),minutes:mins,content:'🎤 自動計測',mood:3,note:`音検知タイマーで${mins}分記録`});
+    save(DB);
+  }
+  audioTimer.active=false;
+  audioTimer.analyzing=true;
+  audioTimer.interval=null;
+  audioTimer.stream=null;
+  audioTimer.audioCtx=null;
+  r();
+  setTimeout(()=>{
+    const report=generateAIScore(inst);
+    // Save AI score
+    DB.aiScores.push({id:uid(),sid:selStudent.id,date:today(),...report});
+    save(DB);
+    audioTimer.analyzing=false;
+    audioTimer.showReport=true;
+    audioTimer.reportData=report;
+    r();
+    // Animate score if enabled
+    if(DB.settings.showScore) animateKaraokeScore(report.score);
+  },3000);
+}
+
+function animateKaraokeScore(target){
+  const el=document.getElementById('karaoke-score-num');
+  if(!el)return;
+  let cur=0;
+  const step=Math.ceil(target/60);
+  karaokeAnim=setInterval(()=>{
+    cur=Math.min(cur+step,target);
+    el.textContent=cur;
+    if(cur>=target)clearInterval(karaokeAnim);
+  },30);
+}
+
+function closeReport(){
+  audioTimer={active:false,analyzing:false,showReport:false,reportData:null,seconds:0,soundLevel:0,interval:null,stream:null,audioCtx:null,analyser:null,dataArray:null,prevStamps:0};
+  r();
+}
+
+function showStampToast(){
+  const t=document.createElement('div');
+  t.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#111126;border:2px solid #f4b942;border-radius:16px;padding:20px 32px;text-align:center;z-index:999;animation:pop .4s ease;';
+  t.innerHTML='<div style="font-size:40px">💮</div><div style="color:#f4b942;font-weight:700;margin-top:8px">スタンプ獲得！</div><div style="color:#a0a0c0;font-size:12px;margin-top:4px">15分練習達成🎉</div>';
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),2000);
+}
+
+// ============================================================
+// Render helpers
 // ============================================================
 function r(){
   const app=document.getElementById('app');
-  if(mode==='teacher'){
-    if(tView==='list') app.innerHTML=renderTeacherList();
-    else app.innerHTML=renderTeacherDetail();
-  } else {
-    if(sView==='home') app.innerHTML=renderStudentHome();
-    else app.innerHTML=renderStudentDash();
+  if(mode==='teacher'){if(tView==='list')app.innerHTML=renderTeacherList();else app.innerHTML=renderTeacherDetail();}
+  else{if(sView==='home')app.innerHTML=renderStudentHome();else app.innerHTML=renderStudentDash();}
+}
+
+function radarSVG(scores,items,size){size=size||180;const n=items.length,cx=size/2,cy=size/2,rr=size*0.35;const angle=i=>Math.PI*2*i/n-Math.PI/2;const pt=(i,v)=>({x:cx+rr*(v/5)*Math.cos(angle(i)),y:cy+rr*(v/5)*Math.sin(angle(i))});let h=`<svg width="${size}" height="${size}">`;for(let lv=1;lv<=5;lv++){const pts=items.map((_,i)=>{const p=pt(i,lv);return `${p.x},${p.y}`;}).join(' ');h+=`<polygon points="${pts}" fill="none" stroke="#252538" stroke-width="1"/>`;}items.forEach((_,i)=>{const p=pt(i,5);h+=`<line x1="${cx}" y1="${cy}" x2="${p.x}" y2="${p.y}" stroke="#252538" stroke-width="1"/>`;});const dpts=items.map((it,i)=>{const p=pt(i,scores[it.k]||0);return `${p.x},${p.y}`;}).join(' ');h+=`<polygon points="${dpts}" fill="#6ee7b7" fill-opacity="0.28" stroke="#6ee7b7" stroke-width="2"/>`;items.forEach((it,i)=>{const lp=pt(i,6.3);h+=`<text x="${lp.x}" y="${lp.y}" text-anchor="middle" dominant-baseline="middle" style="font-size:10px;fill:#8888aa">${it.l}</text>`;});return h+'</svg>';}
+
+function lineSVG(data,labels,color){color=color||'#6ee7b7';if(data.length<2)return '<div style="color:#444;font-size:12px;padding:8px 0">データが2件以上になると表示されます</div>';const w=270,h=80,pad=14;const mn=Math.min(...data),mx=Math.max(...data)+1;const xStep=(w-pad*2)/(data.length-1);const yScale=v=>pad+((mx-v)/(mx-mn||1))*(h-pad*2);let h2=`<svg width="${w}" height="${h}" style="overflow:visible">`;for(let i=0;i<4;i++){const lv=mn+i*(mx-mn)/3;h2+=`<line x1="${pad}" y1="${yScale(lv)}" x2="${w-pad}" y2="${yScale(lv)}" stroke="#1e1e32" stroke-width="1"/>`;}const pts=data.map((v,i)=>`${pad+i*xStep},${yScale(v)}`).join(' ');h2+=`<polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linejoin="round"/>`;data.forEach((v,i)=>h2+=`<circle cx="${pad+i*xStep}" cy="${yScale(v)}" r="4" fill="${color}"/>`);if(labels)data.forEach((_,i)=>h2+=`<text x="${pad+i*xStep}" y="${h+10}" text-anchor="middle" style="font-size:9px;fill:#555">${labels[i]}</text>`);return h2+'</svg>';}
+
+function calendarHTML(sid){const days=[];const t=new Date();t.setHours(0,0,0,0);for(let i=29;i>=0;i--){const d=new Date(t);d.setDate(t.getDate()-i);days.push(d.toISOString().slice(0,10));}const practiced=new Set(DB.practices.filter(p=>p.sid===sid).map(p=>p.date));return '<div class="calendar">'+days.map(d=>`<div class="cal-day${practiced.has(d)?' done':''}">${practiced.has(d)?'✓':''}</div>`).join('')+'</div>';}
+
+function stampCardHTML(sid){
+  const totalStamps=getStamps(sid);
+  const cardNum=Math.floor(totalStamps/STAMP_PER_CARD)+1;
+  const stampsOnCard=totalStamps%STAMP_PER_CARD;
+  let h=`<div class="card"><div class="card-label">💮 スタンプカード（${cardNum}枚目）</div><div style="font-size:11px;color:#777;margin-bottom:8px">15分練習ごとに1個 · 20個でコンプリート！</div><div class="stamp-grid">`;
+  for(let i=0;i<STAMP_PER_CARD;i++)h+=`<div class="stamp${i<stampsOnCard?' filled':''}">${i<stampsOnCard?'💮':i+1}</div>`;
+  h+=`</div><div style="text-align:center;color:#a0a0c0;font-size:12px;margin-top:8px">${stampsOnCard} / ${STAMP_PER_CARD} 個</div></div>`;
+  return h;
+}
+
+function progressHTML(sid){
+  const totalMin=getTotalMin(sid)+(audioTimer.active&&selStudent&&selStudent.id===sid?Math.floor(audioTimer.seconds/60):0);
+  const totalH=totalMin/60;
+  const pct=Math.min(100,(totalH/GOAL_HOURS)*100);
+  return `<div class="card"><div class="card-label">🏆 1000時間への道</div>
+    <div style="font-size:28px;font-weight:800;color:#6ee7b7;text-align:center;margin:8px 0">${totalH.toFixed(1)}<span style="font-size:14px;color:#a0a0c0"> / 1000時間</span></div>
+    <div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>
+    <div class="milestone"><span style="color:${totalH>=100?'#6ee7b7':'#333'}">${totalH>=100?'✓':''} 100h</span><span style="color:${totalH>=500?'#6ee7b7':'#333'}">${totalH>=500?'✓':''} 500h</span><span style="color:${totalH>=1000?'#6ee7b7':'#333'}">${totalH>=1000?'✓':''} 1000h</span></div>
+    <div style="text-align:center;color:#555;font-size:11px;margin-top:6px">残り ${Math.max(0,GOAL_HOURS-totalH).toFixed(1)}時間</div>
+  </div>`;
+}
+
+function audioTimerHTML(){
+  if(audioTimer.analyzing){
+    return `<div class="card" style="text-align:center;padding:32px 16px">
+      <div class="spinner"></div>
+      <div style="font-size:16px;font-weight:700;color:#6ee7b7;margin-bottom:8px">🤖 AI採点中...</div>
+      <div style="color:#777;font-size:13px">演奏データを分析しています</div>
+      <div class="waveform">
+        <div class="waveform-bar" style="height:30%"></div><div class="waveform-bar" style="height:60%"></div>
+        <div class="waveform-bar" style="height:90%"></div><div class="waveform-bar" style="height:70%"></div>
+        <div class="waveform-bar" style="height:100%"></div><div class="waveform-bar" style="height:80%"></div>
+        <div class="waveform-bar" style="height:60%"></div><div class="waveform-bar" style="height:40%"></div>
+      </div>
+    </div>`;
   }
-}
-
-// ---- Helpers ----
-function stars(val,cb,sm){
-  let h=`<span class="stars${sm?' stars-sm':''}">`;
-  for(let i=1;i<=5;i++) h+=`<span class="${val>=i?'on':''}" ${cb?`onclick="${cb}(${i})"`:''}">★</span>`;
-  return h+'</span>';
-}
-
-function radarSVG(scores,items,size){
-  size=size||180;
-  const n=items.length,cx=size/2,cy=size/2,rr=size*0.35;
-  const angle=i=>Math.PI*2*i/n-Math.PI/2;
-  const pt=(i,v)=>({x:cx+rr*(v/5)*Math.cos(angle(i)),y:cy+rr*(v/5)*Math.sin(angle(i))});
-  let h=`<svg width="${size}" height="${size}">`;
-  for(let lv=1;lv<=5;lv++){
-    const pts=items.map((_,i)=>{const p=pt(i,lv);return `${p.x},${p.y}`;}).join(' ');
-    h+=`<polygon points="${pts}" fill="none" stroke="#252538" stroke-width="1"/>`;
+  if(audioTimer.showReport&&audioTimer.reportData){
+    const d=audioTimer.reportData;
+    const showScore=DB.settings.showScore;
+    // Find prev score for comparison
+    const myScores=[...DB.aiScores.filter(a=>a.sid===selStudent.id)].sort((a,b)=>a.date.localeCompare(b.date));
+    const prevScore=myScores.length>=2?myScores[myScores.length-2].score:null;
+    const diff=prevScore!==null?d.score-prevScore:null;
+    let diffHtml='';
+    if(diff!==null&&showScore){
+      if(diff>0)diffHtml=`<div class="score-diff up">▲ 前回より +${diff}点</div>`;
+      else if(diff<0)diffHtml=`<div class="score-diff down">▼ 前回より ${diff}点</div>`;
+      else diffHtml=`<div class="score-diff same">前回と同じスコア</div>`;
+    }
+    return `<div class="card" style="border-color:#6ee7b7">
+      <div style="font-size:15px;font-weight:800;color:#6ee7b7;margin-bottom:4px">✨ AI採点結果</div>
+      ${showScore?`
+        <div class="karaoke-score"><span id="karaoke-score-num">0</span></div>
+        <div style="text-align:center;color:#777;font-size:12px;margin-bottom:4px">/ 1000点</div>
+        ${diffHtml}
+        <div style="margin:12px 0">
+          ${[{l:'表現力',k:'expression',c:'#6ee7b7'},{l:'精度',k:'accuracy',c:'#a78bfa'},{l:'集中度',k:'focus',c:'#f4b942'}].map(item=>`
+          <div class="score-bar-wrap">
+            <div class="score-bar-label"><span>${item.l}</span><span>${d.breakdown[item.k]}%</span></div>
+            <div class="score-bar-bg"><div class="score-bar-fill" style="width:${d.breakdown[item.k]}%;background:${item.c}"></div></div>
+          </div>`).join('')}
+        </div>
+      `:''}
+      <div style="background:#0d1a12;border-left:3px solid #6ee7b7;border-radius:0 8px 8px 0;padding:12px;margin:12px 0;font-size:13px;color:#c0d8c8;line-height:1.7">
+        🤖 <strong>AIアドバイス</strong><br><br>${d.advice}
+      </div>
+      <div class="keyword-tags">${d.keywords.map(k=>`<span class="keyword-tag">${k}</span>`).join('')}</div>
+      <div style="text-align:center;margin:12px 0;font-size:14px;color:#f4b942;font-weight:700">💮 スタンプ獲得！</div>
+      <button class="btn" onclick="closeReport()">次の練習へ</button>
+    </div>`;
   }
-  items.forEach((_,i)=>{const p=pt(i,5);h+=`<line x1="${cx}" y1="${cy}" x2="${p.x}" y2="${p.y}" stroke="#252538" stroke-width="1"/>`;});
-  const dpts=items.map((it,i)=>{const p=pt(i,scores[it.k]||0);return `${p.x},${p.y}`;}).join(' ');
-  h+=`<polygon points="${dpts}" fill="#6ee7b7" fill-opacity="0.28" stroke="#6ee7b7" stroke-width="2"/>`;
-  items.forEach((it,i)=>{const lp=pt(i,6.3);h+=`<text x="${lp.x}" y="${lp.y}" text-anchor="middle" dominant-baseline="middle" style="font-size:10px;fill:#8888aa">${it.l}</text>`;});
-  return h+'</svg>';
+  const m=Math.floor(audioTimer.seconds/60),s=audioTimer.seconds%60;
+  return `<div class="card" style="text-align:center">
+    <div class="card-label">🎤 音検知タイマー</div>
+    <div style="font-size:12px;color:#a0a0c0;margin-bottom:12px">楽器の音を検知して自動で練習時間とAI採点を記録</div>
+    ${audioTimer.active?`
+      <div class="timer-big" id="timer-display">${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}</div>
+      <div style="font-size:12px;color:#555;margin-bottom:8px">音が鳴っている時間だけカウント</div>
+      <div style="color:#6ee7b7;font-size:12px;margin-bottom:8px" id="detecting-txt">🎤 待機中...</div>
+      <div class="sound-bar"><div class="sound-fill" id="sound-fill" style="width:0%"></div></div>
+      <div style="color:#a0a0c0;font-size:12px;margin:8px 0">スタンプ: ${getStamps(selStudent.id)}個</div>
+      <button class="btn btn-orange" style="margin-top:14px" onclick="stopAudioTimer()">⏹ 練習終了・AI採点</button>
+    `:`
+      <div class="timer-big">00:00</div>
+      <div style="font-size:12px;color:#555;margin-bottom:16px">スタートすると自動で計測＆採点します</div>
+      <button class="btn" onclick="startAudioTimer()">▶ 練習スタート</button>
+    `}
+  </div>`;
 }
 
-function lineSVG(data,labels){
-  if(data.length<2)return '<div style="color:#444;font-size:12px;padding:8px 0">レッスンが2回以上になると表示されます</div>';
-  const w=270,h=80,pad=14;
-  const xStep=(w-pad*2)/(data.length-1);
-  const yScale=v=>pad+((5-v)/5)*(h-pad*2);
-  let h2=`<svg width="${w}" height="${h}" style="overflow:visible">`;
-  for(let lv=1;lv<=5;lv++) h2+=`<line x1="${pad}" y1="${yScale(lv)}" x2="${w-pad}" y2="${yScale(lv)}" stroke="#1e1e32" stroke-width="1"/>`;
-  const pts=data.map((v,i)=>`${pad+i*xStep},${yScale(v)}`).join(' ');
-  h2+=`<polyline points="${pts}" fill="none" stroke="#6ee7b7" stroke-width="2.5" stroke-linejoin="round"/>`;
-  data.forEach((v,i)=>h2+=`<circle cx="${pad+i*xStep}" cy="${yScale(v)}" r="4" fill="#6ee7b7"/>`);
-  if(labels) data.forEach((_,i)=>h2+=`<text x="${pad+i*xStep}" y="${h+10}" text-anchor="middle" style="font-size:9px;fill:#555">${labels[i]}</text>`);
-  return h2+'</svg>';
-}
-
-function calendarHTML(sid){
-  const days=[];const today2=new Date();today2.setHours(0,0,0,0);
-  for(let i=29;i>=0;i--){const d=new Date(today2);d.setDate(today2.getDate()-i);days.push(d.toISOString().slice(0,10));}
-  const practiced=new Set(DB.practices.filter(p=>p.sid===sid).map(p=>p.date));
-  return '<div class="calendar">'+days.map(d=>`<div class="cal-day${practiced.has(d)?' done':''}" title="${d}">${practiced.has(d)?'✓':''}</div>`).join('')+'</div>';
-}
-
-// ---- Teacher ----
+// ============================================================
+// Teacher Views
+// ============================================================
 function renderTeacherList(){
   let h=`<h2 class="section-title">生徒一覧</h2>`;
   DB.students.forEach(s=>{
-    h+=`<div class="card" onclick="selectStudent('${s.id}')"><div class="student-item"><div><div style="font-weight:700;font-size:16px">${s.name}</div><div class="small green">${s.instrument} · ${s.since}〜</div></div><span class="arrow">›</span></div></div>`;
+    const totalH=(getTotalMin(s.id)/60).toFixed(1);
+    const planLabel=s.plan==='pro'?'<span class="plan-badge plan-pro">PRO</span>':'<span class="plan-badge plan-free">無料</span>';
+    h+=`<div class="card" onclick="selectStudent('${s.id}')"><div class="student-item"><div>
+      <div style="font-weight:700;font-size:16px">${s.name}${planLabel}</div>
+      <div class="small green">${s.instrument} · ${s.since}〜</div>
+      <div style="font-size:11px;color:#555;margin-top:2px">累計 ${totalH}時間</div>
+    </div><span class="arrow">›</span></div></div>`;
   });
   h+=`<div class="card" style="border-color:#1a1a3a;margin-top:8px">
     <div class="card-label">＋ 生徒を追加</div>
@@ -232,6 +426,13 @@ function renderTeacherList(){
     <select class="inp" style="margin-top:8px" id="newInst" onchange="newInst=this.value">
       ${INSTRUMENTS.map(v=>`<option${v===newInst?' selected':''}>${v}</option>`).join('')}
     </select>
+    <div style="margin-top:10px">
+      <div class="card-label">プラン</div>
+      <div style="display:flex;gap:8px">
+        <button class="chip-btn${newPlan==='free'?' active':''}" onclick="newPlan='free';r()">無料</button>
+        <button class="chip-btn${newPlan==='pro'?' active':''}" onclick="newPlan='pro';r()">PRO</button>
+      </div>
+    </div>
     <button class="btn" onclick="addStudent()">追加</button>
   </div>`;
   return h;
@@ -239,83 +440,83 @@ function renderTeacherList(){
 
 function renderTeacherDetail(){
   const s=selStudent;
-  const items=tmpl(s.instrument);
+  const isPro=s.plan==='pro';
+  const planLabel=isPro?'<span class="plan-badge plan-pro">PRO</span>':'<span class="plan-badge plan-free">無料</span>';
   let h=`<button class="back-btn" onclick="tView='list';r()">← 戻る</button>
-  <div style="margin-bottom:14px"><div style="font-size:20px;font-weight:800">${s.name}</div><div class="small green">${s.instrument}</div></div>
+  <div style="margin-bottom:14px">
+    <div style="font-size:20px;font-weight:800">${s.name}${planLabel}</div>
+    <div class="small green">${s.instrument}</div>
+  </div>
   <div class="tabs">
-    <button class="tab-btn${tTab==='lesson'?' active':''}" onclick="tTab='lesson';r()">📝 レッスン</button>
-    <button class="tab-btn${tTab==='video'?' active':''}" onclick="tTab='video';r()">🎬 動画評価</button>
-    <button class="tab-btn${tTab==='homework'?' active':''}" onclick="tTab='homework';r()">📌 課題</button>
+    ${isPro?`<button class="tab-btn${tTab==='lesson'?' active':''}" onclick="tTab='lesson';r()">💬 アドバイス</button>
+    <button class="tab-btn${tTab==='homework'?' active':''}" onclick="tTab='homework';r()">📌 課題</button>`:''}
+    <button class="tab-btn${tTab==='scores'?' active':''}" onclick="tTab='scores';r()">📊 AI採点履歴</button>
+    <button class="tab-btn${tTab==='practice'?' active':''}" onclick="tTab='practice';r()">🗓 練習記録</button>
   </div>`;
 
-  if(tTab==='lesson'){
+  if(tTab==='lesson'&&isPro){
     h+=`<div class="card">
-      <div class="card-label">新しいレッスンを記録</div>
+      <div class="card-label">💬 アドバイスを追加（PROプラン）</div>
       <input type="date" class="inp" value="${lf.date}" onchange="lf.date=this.value">
-      <input class="inp" style="margin-top:8px" placeholder="曲名" value="${lf.song}" oninput="lf.song=this.value">
-      <div style="margin-top:12px">`;
-    items.forEach(it=>{
-      if(!lf.scores[it.k]) lf.scores[it.k]=3;
-      h+=`<div class="row"><span class="muted small" style="width:80px">${it.l}</span>${stars(lf.scores[it.k],`setLScore_${it.k}`)}</div>`;
-    });
-    h+=`</div><textarea class="inp" style="margin-top:8px" placeholder="コメント（任意）" oninput="lf.comment=this.value">${lf.comment}</textarea>
-      <button class="btn" onclick="addLesson()">記録する</button>
+      <textarea class="inp" style="margin-top:8px" placeholder="生徒へのアドバイス・コメント" oninput="lf.advice=this.value">${lf.advice}</textarea>
+      <button class="btn" onclick="addLesson()">送る</button>
     </div>`;
-    const myLessons=[...DB.lessons.filter(l=>l.sid===s.id)].sort((a,b)=>b.date.localeCompare(a.date));
-    myLessons.forEach(l=>{
-      h+=`<div class="card"><div class="row"><span class="small green">${l.date}</span><span style="font-weight:600">${l.song}</span></div>
-      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">`;
-      items.forEach(it=>h+=`<div class="smaller">${it.l} ${stars(l.scores[it.k]||0,null,true)}</div>`);
-      h+=`</div>${l.comment?`<div style="margin-top:6px;color:#c0c0d8;font-size:12px">💬 ${l.comment}</div>`:''}</div>`;
-    });
+    const myL=[...DB.lessons.filter(l=>l.sid===s.id)].sort((a,b)=>b.date.localeCompare(a.date));
+    myL.forEach(l=>{h+=`<div class="card"><div class="row"><span class="small green">${l.date}</span></div><div style="color:#c0d8c8;font-size:13px;margin-top:4px;line-height:1.6">💬 ${l.advice}</div></div>`;});
   }
 
-  if(tTab==='video'){
+  if(tTab==='homework'&&isPro){
     h+=`<div class="card">
-      <div class="card-label">月次動画評価を記録</div>
-      <input type="month" class="inp" value="${vf.month}" onchange="vf.month=this.value">
-      <input class="inp" style="margin-top:8px" placeholder="曲名" value="${vf.song}" oninput="vf.song=this.value">
-      <div style="margin-top:10px">`;
-    VIDEO_ITEMS.forEach(it=>{
-      h+=`<div class="row"><span class="muted small" style="width:80px">${it.l}</span>${stars(vf.scores[it.k]||3,`setVScore_${it.k}`)}</div>`;
-    });
-    h+=`</div><textarea class="inp" style="margin-top:8px" placeholder="コメント" oninput="vf.comment=this.value">${vf.comment}</textarea>
-      <button class="btn" onclick="addVideo()">記録する</button>
-    </div>`;
-    const myVideos=[...DB.videos.filter(v=>v.sid===s.id)].sort((a,b)=>b.month.localeCompare(a.month));
-    myVideos.forEach(v=>{
-      h+=`<div class="card"><div class="row"><span class="small green">${v.month}</span><span style="font-weight:600">${v.song}</span></div>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px">`;
-      VIDEO_ITEMS.forEach(it=>h+=`<div class="smaller">${it.l} ${stars(v.scores[it.k],null,true)}</div>`);
-      h+=`</div>${v.comment?`<div style="margin-top:6px;color:#c0c0d8;font-size:12px">💬 ${v.comment}</div>`:''}</div>`;
-    });
-  }
-
-  if(tTab==='homework'){
-    h+=`<div class="card">
-      <div class="card-label">課題を追加</div>
-      <textarea class="inp" style="height:64px" placeholder="課題内容（例：右手だけでテンポ60まで）" oninput="hw.task=this.value">${hw.task}</textarea>
+      <div class="card-label">📌 課題を追加（PROプラン）</div>
+      <textarea class="inp" style="height:64px" placeholder="課題内容" oninput="hw.task=this.value">${hw.task}</textarea>
       <div class="muted small" style="margin:8px 0 4px">次回レッスン日</div>
       <input type="date" class="inp" value="${hw.dueDate}" onchange="hw.dueDate=this.value">
       <button class="btn" onclick="addHomework()">課題を設定</button>
     </div>`;
     DB.homeworks.filter(h2=>h2.sid===s.id).forEach(hw2=>{
-      h+=`<div class="card" style="opacity:${hw2.done?0.5:1}"><div class="hw-row">
-        <div style="flex:1"><div class="${hw2.done?'done-text':''}" style="font-size:14px">${hw2.task}</div>
-        ${hw2.dueDate?`<div class="small green" style="margin-top:4px">期限: ${hw2.dueDate}</div>`:''}</div>
-        <button class="mini-btn${hw2.done?' undo':''}" onclick="toggleHw('${hw2.id}')">${hw2.done?'取り消し':'達成！'}</button>
-      </div></div>`;
+      h+=`<div class="card" style="opacity:${hw2.done?0.5:1}"><div class="hw-row"><div style="flex:1"><div class="${hw2.done?'done-text':''}" style="font-size:14px">${hw2.task}</div>${hw2.dueDate?`<div class="small green" style="margin-top:4px">期限: ${hw2.dueDate}</div>`:''}</div><button class="mini-btn${hw2.done?' undo':''}" onclick="toggleHw('${hw2.id}')">${hw2.done?'取り消し':'達成！'}</button></div></div>`;
     });
+  }
+
+  if(tTab==='scores'){
+    const myScores=[...DB.aiScores.filter(a=>a.sid===s.id)].sort((a,b)=>b.date.localeCompare(a.date));
+    if(!myScores.length){h+='<div style="color:#555;font-size:13px">AI採点記録がまだありません。</div>';}
+    myScores.forEach(a=>{
+      h+=`<div class="card"><div class="row"><span class="small green">${a.date}</span><span style="font-size:20px;font-weight:800;color:#f4b942">${a.score}点</span></div>
+      <div style="display:flex;gap:12px;margin-top:6px;flex-wrap:wrap">
+        <span class="smaller">表現 ${a.breakdown.expression}%</span>
+        <span class="smaller">精度 ${a.breakdown.accuracy}%</span>
+        <span class="smaller">集中 ${a.breakdown.focus}%</span>
+      </div>
+      ${a.advice?`<div style="color:#c0d8c8;font-size:12px;margin-top:6px">🤖 ${a.advice}</div>`:''}
+      </div>`;
+    });
+  }
+
+  if(tTab==='practice'){
+    const myP=[...DB.practices.filter(p=>p.sid===s.id)].sort((a,b)=>b.date.localeCompare(a.date));
+    if(!myP.length){h+='<div style="color:#555;font-size:13px">練習記録がまだありません。</div>';}
+    myP.forEach(p=>{h+=`<div class="card"><div class="row"><span class="small green">${p.date}</span><span style="font-size:18px">${MOODS[p.mood]}</span></div><div style="font-size:14px;font-weight:600;margin-top:4px">${p.content}</div><div class="smaller">⏱ ${p.minutes}分</div></div>`;});
   }
   return h;
 }
 
-// ---- Student ----
+// ============================================================
+// Student Views
+// ============================================================
 function renderStudentHome(){
   let h='<h2 class="section-title">生徒を選択</h2>';
   DB.students.forEach(s=>{
+    const totalH=(getTotalMin(s.id)/60).toFixed(1);
+    const stamps=getStamps(s.id);
+    const myScores=DB.aiScores.filter(a=>a.sid===s.id);
+    const bestScore=myScores.length?Math.max(...myScores.map(a=>a.score)):null;
     h+=`<div class="card" onclick="selStudent=DB.students.find(x=>x.id==='${s.id}');sView='dash';sTab='home';r()">
-      <div class="student-item"><div><div style="font-weight:700;font-size:18px">${s.name}</div><div class="small green">${s.instrument} · ${s.since}〜</div></div><span class="arrow">›</span></div>
+      <div class="student-item"><div>
+        <div style="font-weight:700;font-size:18px">${s.name}</div>
+        <div class="small green">${s.instrument} · ${s.since}〜</div>
+        <div style="font-size:11px;color:#555;margin-top:2px">⏱ ${totalH}時間 · 💮 ${stamps}個${bestScore?` · 🏆 最高 ${bestScore}点`:''}</div>
+      </div><span class="arrow">›</span></div>
     </div>`;
   });
   return h;
@@ -323,217 +524,152 @@ function renderStudentHome(){
 
 function renderStudentDash(){
   const s=selStudent;
+  const isPro=s.plan==='pro';
   const streak=getStreak(s.id);
   const totalMin=getTotalMin(s.id);
-  const items=tmpl(s.instrument);
+  const totalH=(totalMin/60).toFixed(1);
+  const stamps=getStamps(s.id);
   const myLessons=[...DB.lessons.filter(l=>l.sid===s.id)].sort((a,b)=>a.date.localeCompare(b.date));
-  const myVideos=[...DB.videos.filter(v=>v.sid===s.id)].sort((a,b)=>a.month.localeCompare(b.month));
+  const myVideos=[];
   const myPractices=[...DB.practices.filter(p=>p.sid===s.id)].sort((a,b)=>a.date.localeCompare(b.date));
   const myHw=DB.homeworks.filter(h=>h.sid===s.id&&!h.done);
-  const latest=myLessons[myLessons.length-1];
-  const trendData=myLessons.map(l=>avg(l.scores));
-  const trendLabels=myLessons.map(l=>l.date.slice(5));
-  const avgScores=myLessons.length>0?items.reduce((acc,it)=>({...acc,[it.k]:myLessons.map(l=>l.scores[it.k]||0).reduce((a,b)=>a+b,0)/myLessons.length}),{}):items.reduce((a,it)=>({...a,[it.k]:0}),{});
+  const myScores=[...DB.aiScores.filter(a=>a.sid===s.id)].sort((a,b)=>a.date.localeCompare(b.date));
+  const latestAdvice=isPro?myLessons[myLessons.length-1]:null;
+  const showScore=DB.settings.showScore;
 
   let h=`<button class="back-btn" onclick="sView='home';r()">← 戻る</button>
-  <div style="margin-bottom:14px"><div style="font-size:22px;font-weight:800">${s.name}</div><div class="small green">${s.instrument} · ${s.since}〜</div></div>
+  <div style="margin-bottom:14px">
+    <div style="font-size:22px;font-weight:800">${s.name}</div>
+    <div class="small green">${s.instrument} · ${s.since}〜 ${isPro?'<span class="plan-badge plan-pro">PRO</span>':'<span class="plan-badge plan-free">無料</span>'}</div>
+  </div>
   <div class="stat-bar">
-    <div class="stat-box"><div class="stat-val">${streak}日</div><div class="stat-lbl">🔥 連続練習</div></div>
-    <div class="stat-box"><div class="stat-val">${Math.floor(totalMin/60)}h${totalMin%60}m</div><div class="stat-lbl">⏱ 累計時間</div></div>
-    <div class="stat-box"><div class="stat-val">${myLessons.length}回</div><div class="stat-lbl">📝 レッスン</div></div>
+    <div class="stat-box"><div class="stat-val">${streak}日</div><div class="stat-lbl">🔥 連続</div></div>
+    <div class="stat-box"><div class="stat-val">${totalH}h</div><div class="stat-lbl">⏱ 累計</div></div>
+    <div class="stat-box"><div class="stat-val">${stamps}💮</div><div class="stat-lbl">スタンプ</div></div>
   </div>
   <div class="tabs">
     <button class="tab-btn${sTab==='home'?' active':''}" onclick="sTab='home';r()" style="font-size:11px;padding:5px 8px">🏠 ホーム</button>
-    <button class="tab-btn${sTab==='practice'?' active':''}" onclick="sTab='practice';r()" style="font-size:11px;padding:5px 8px">✏️ 練習</button>
+    <button class="tab-btn${sTab==='practice'?' active':''}" onclick="sTab='practice';r()" style="font-size:11px;padding:5px 8px">🎤 練習</button>
     <button class="tab-btn${sTab==='growth'?' active':''}" onclick="sTab='growth';r()" style="font-size:11px;padding:5px 8px">📊 成長</button>
-    <button class="tab-btn${sTab==='homework'?' active':''}" onclick="sTab='homework';r()" style="font-size:11px;padding:5px 8px">📌 課題</button>
-    <button class="tab-btn${sTab==='video'?' active':''}" onclick="sTab='video';r()" style="font-size:11px;padding:5px 8px">🎬 動画</button>
-    <button class="tab-btn${sTab==='metro'?' active':''}" onclick="sTab='metro';r()" style="font-size:11px;padding:5px 8px">🎵 テンポ</button>
+    <button class="tab-btn${sTab==='stamp'?' active':''}" onclick="sTab='stamp';r()" style="font-size:11px;padding:5px 8px">💮 スタンプ</button>
+    ${isPro?`<button class="tab-btn${sTab==='homework'?' active':''}" onclick="sTab='homework';r()" style="font-size:11px;padding:5px 8px">📌 課題</button>`:''}
+    <button class="tab-btn${sTab==='settings'?' active':''}" onclick="sTab='settings';r()" style="font-size:11px;padding:5px 8px">⚙️</button>
+    <button class="tab-btn${sTab==='metro'?' active':''}" onclick="sTab='metro';r()" style="font-size:11px;padding:5px 8px">🎵</button>
   </div>`;
 
   if(sTab==='home'){
-    if(myHw.length) h+=`<div class="card" style="border-color:#2a1a5a">${myHw.map(hw2=>`<div class="card-label">📌 今の課題</div><div style="font-size:14px;margin-bottom:4px">• ${hw2.task}</div>`).join('')}</div>`;
-    if(latest) h+=`<div class="card"><div class="card-label">🎵 直近レッスン（${latest.date}）</div>
-      <div style="font-weight:700;margin-bottom:8px">${latest.song}</div>
-      ${items.map(it=>`<div class="row" style="margin-bottom:4px"><span class="muted small" style="width:70px">${it.l}</span>${stars(latest.scores[it.k]||0,null,true)}</div>`).join('')}
-      ${latest.comment?`<div style="margin-top:8px;color:#c0c0d8;font-size:12px;font-style:italic">💬 ${latest.comment}</div>`:''}
-    </div>`;
-    h+=`<div class="card"><div class="card-label">📈 スコアの推移</div>${lineSVG(trendData,trendLabels)}</div>`;
+    h+=progressHTML(s.id);
+    // Latest AI score
+    if(myScores.length&&showScore){
+      const ls=myScores[myScores.length-1];
+      const prev=myScores.length>=2?myScores[myScores.length-2]:null;
+      const diff=prev?ls.score-prev.score:null;
+      h+=`<div class="card" style="border-color:#f4b942">
+        <div class="card-label">🎵 直近のAI採点</div>
+        <div style="font-size:48px;font-weight:900;text-align:center;background:linear-gradient(135deg,#f4b942,#fb923c);-webkit-background-clip:text;-webkit-text-fill-color:transparent">${ls.score}</div>
+        <div style="text-align:center;color:#777;font-size:12px">/ 1000点</div>
+        ${diff!==null?`<div class="score-diff ${diff>0?'up':diff<0?'down':'same'}" style="margin-top:4px">${diff>0?'▲':'▼'} 前回より ${Math.abs(diff)}点${diff>0?'アップ！':'ダウン'}</div>`:''}
+        <div style="color:#c0d8c8;font-size:12px;margin-top:8px;line-height:1.6">🤖 ${ls.advice}</div>
+      </div>`;
+    }
+    if(isPro&&latestAdvice){
+      h+=`<div class="card" style="border-color:#a78bfa"><div class="card-label">💬 先生からのアドバイス</div><div style="color:#c0c8f0;font-size:13px;line-height:1.7">${latestAdvice.advice}</div><div class="smaller" style="margin-top:6px">${latestAdvice.date}</div></div>`;
+    }
+    if(!isPro){
+      h+=`<div class="card" style="border-color:#a78bfa;background:#0d0d22">
+        <div style="text-align:center;padding:8px 0">
+          <div style="font-size:20px;margin-bottom:8px">⭐ PROプランにアップグレード</div>
+          <div style="color:#a0a0c0;font-size:13px;line-height:1.7;margin-bottom:12px">先生からのアドバイス・課題設定・詳細フィードバックが受けられます</div>
+          <button class="btn btn-purple" style="margin-top:0">詳しく見る</button>
+        </div>
+      </div>`;
+    }
   }
 
   if(sTab==='practice'){
-    h+=`<div class="card">
-      <div class="card-label">今日の練習を記録</div>
+    h+=audioTimerHTML();
+    h+=`<div class="card" style="margin-top:4px"><div class="card-label">手動で記録する</div>
       <input type="date" class="inp" value="${pf.date}" onchange="pf.date=this.value">
-      <div style="margin:12px 0 4px"><div class="muted small" style="margin-bottom:6px">練習時間</div>
+      <div style="margin:10px 0 4px"><div class="muted small" style="margin-bottom:6px">練習時間</div>
       <div class="chips">${[10,15,20,30,45,60,90].map(m=>`<button class="chip-btn${pf.minutes===m?' active':''}" onclick="pf.minutes=${m};r()">${m}分</button>`).join('')}</div></div>
-      <input class="inp" style="margin-top:6px" placeholder="練習内容（例：ソナタ 1楽章 右手）" value="${pf.content}" oninput="pf.content=this.value">
-      <div style="margin-top:12px"><div class="muted small" style="margin-bottom:8px">今日の調子</div>
+      <input class="inp" style="margin-top:6px" placeholder="練習内容" value="${pf.content}" oninput="pf.content=this.value">
+      <div style="margin-top:10px"><div class="muted small" style="margin-bottom:8px">今日の調子</div>
       <div class="mood-bar">${MOODS.map((m,i)=>`<span class="${pf.mood===i?'on':''}" onclick="pf.mood=${i};r()">${m}</span>`).join('')}</div></div>
       <textarea class="inp" style="margin-top:10px;height:52px" placeholder="メモ（任意）" oninput="pf.note=this.value">${pf.note}</textarea>
       <button class="btn" onclick="addPractice()">記録する</button>
     </div>`;
-    [...myPractices].reverse().forEach(p=>{
-      h+=`<div class="card"><div class="row"><span class="small green">${p.date}</span><span style="font-size:18px">${MOODS[p.mood]}</span></div>
-      <div style="font-weight:600;font-size:14px;margin-top:4px">${p.content}</div>
-      <div class="smaller" style="margin-top:2px">⏱ ${p.minutes}分</div>
-      ${p.note?`<div style="color:#c0c0d8;font-size:12px;margin-top:4px">📝 ${p.note}</div>`:''}</div>`;
-    });
+    [...myPractices].reverse().slice(0,5).forEach(p=>{h+=`<div class="card"><div class="row"><span class="small green">${p.date}</span><span style="font-size:18px">${MOODS[p.mood]}</span></div><div style="font-weight:600;font-size:14px;margin-top:4px">${p.content}</div><div class="smaller">⏱ ${p.minutes}分</div>${p.note?`<div style="color:#c0c0d8;font-size:12px;margin-top:4px">📝 ${p.note}</div>`:''}</div>`;});
   }
 
   if(sTab==='growth'){
-    h+=`<div class="card"><div class="card-label">📊 スキルのバランス（平均）</div><div style="display:flex;justify-content:center">${radarSVG(avgScores,items,200)}</div></div>`;
-    h+=`<div class="card"><div class="card-label">📈 総合スコアの推移</div>${lineSVG(trendData,trendLabels)}</div>`;
+    h+=progressHTML(s.id);
+    if(myScores.length>=2&&showScore){
+      h+=`<div class="card"><div class="card-label">📈 AI採点の推移</div>${lineSVG(myScores.map(a=>a.score),myScores.map(a=>a.date.slice(5)),'#f4b942')}</div>`;
+    }
     h+=`<div class="card"><div class="card-label">🗓 練習カレンダー（直近30日）</div>${calendarHTML(s.id)}</div>`;
+    if(myScores.length){
+      const ls=myScores[myScores.length-1];
+      h+=`<div class="card"><div class="card-label">📊 直近の内訳</div>
+        ${[{l:'表現力',k:'expression',c:'#6ee7b7'},{l:'精度',k:'accuracy',c:'#a78bfa'},{l:'集中度',k:'focus',c:'#f4b942'}].map(item=>`
+        <div class="score-bar-wrap">
+          <div class="score-bar-label"><span>${item.l}</span><span>${ls.breakdown[item.k]}%</span></div>
+          <div class="score-bar-bg"><div class="score-bar-fill" style="width:${ls.breakdown[item.k]}%;background:${item.c}"></div></div>
+        </div>`).join('')}
+      </div>`;
+    }
   }
 
-  if(sTab==='homework'){
+  if(sTab==='stamp'){
+    h+=stampCardHTML(s.id);
+    h+=`<div class="card"><div class="card-label">💮 スタンプの仕組み</div><div style="font-size:13px;color:#a0a0c0;line-height:1.9">• 15分練習ごとに 💮 1個<br>• 20個でカード1枚コンプリート🎉<br>• 音検知タイマーで自動獲得<br>• 手動記録でも獲得できます</div></div>`;
+  }
+
+  if(sTab==='homework'&&isPro){
     h+='<div class="card-label">先生からの課題</div>';
     const allHw=DB.homeworks.filter(h2=>h2.sid===s.id);
-    if(!allHw.length) h+='<div style="color:#555;font-size:13px">課題がまだありません。</div>';
-    allHw.forEach(hw2=>{
-      h+=`<div class="card" style="opacity:${hw2.done?0.45:1}"><div class="hw-row">
-        <div style="flex:1"><div class="${hw2.done?'done-text':''}" style="font-size:14px">${hw2.task}</div>
-        ${hw2.dueDate?`<div class="small green" style="margin-top:4px">期限: ${hw2.dueDate}</div>`:''}</div>
-        <div style="font-size:22px;margin-left:8px">${hw2.done?'✅':'🎯'}</div>
-      </div></div>`;
-    });
+    if(!allHw.length)h+='<div style="color:#555;font-size:13px">課題がまだありません。</div>';
+    allHw.forEach(hw2=>{h+=`<div class="card" style="opacity:${hw2.done?0.45:1}"><div class="hw-row"><div style="flex:1"><div class="${hw2.done?'done-text':''}" style="font-size:14px">${hw2.task}</div>${hw2.dueDate?`<div class="small green" style="margin-top:4px">期限: ${hw2.dueDate}</div>`:''}</div><div style="font-size:22px;margin-left:8px">${hw2.done?'✅':'🎯'}</div></div></div>`;});
   }
 
-  if(sTab==='video'){
-    if(!myVideos.length) h+='<div style="color:#555;font-size:13px">動画評価がまだありません。</div>';
-    [...myVideos].reverse().forEach(v=>{
-      h+=`<div class="card"><div class="row"><span class="small green">${v.month}</span><span style="font-weight:600">${v.song}</span></div>
-      <div style="display:flex;justify-content:center;margin-top:8px">${radarSVG(v.scores,VIDEO_ITEMS,160)}</div>
-      ${v.comment?`<div style="color:#c0c0d8;font-size:12px;font-style:italic;margin-top:4px">💬 ${v.comment}</div>`:''}</div>`;
-    });
+  if(sTab==='settings'){
+    h+=`<div class="card">
+      <div class="card-label">⚙️ 設定</div>
+      <div class="toggle-row">
+        <div>
+          <div style="font-size:14px;color:#e8e8f0">AI採点スコアを表示</div>
+          <div style="font-size:11px;color:#555;margin-top:2px">点数を非表示にしてアドバイスのみ見る</div>
+        </div>
+        <label class="toggle"><input type="checkbox" ${DB.settings.showScore?'checked':''} onchange="DB.settings.showScore=this.checked;save(DB);r()"><span class="toggle-slider"></span></label>
+      </div>
+    </div>`;
   }
 
-  if(sTab==='metro') h+=renderMetro();
+  if(sTab==='metro'){
+    let dots='';
+    for(let i=0;i<metro.bpb;i++){const isFirst=i===0;const isActive=metro.playing&&metro.beat===i;dots+=`<div class="beat-dot ${isFirst?'first':'other'}${isActive?(isFirst?' active-first':' active-other'):''}"></div>`;}
+    h+=`<div class="card" style="text-align:center"><div class="card-label">🎵 メトロノーム</div><div class="beats">${dots}</div><div class="bpm-num">${metro.bpm}</div><div class="bpm-lbl">BPM</div><input type="range" min="30" max="240" value="${metro.bpm}" oninput="setBpm(this.value)"><div class="chips" style="justify-content:center;margin-bottom:14px">${[40,60,72,80,100,120,144,180].map(v=>`<button class="chip-btn${metro.bpm===v?' active':''}" onclick="setBpm(${v})">${v}</button>`).join('')}</div><div style="display:flex;justify-content:center;align-items:center;gap:8px;margin-bottom:20px"><span class="muted small">拍子</span>${[2,3,4,6].map(v=>`<button class="chip-btn${metro.bpb===v?' active':''}" onclick="setBpb(${v})">${v}拍</button>`).join('')}</div><button class="btn${metro.playing?' btn-red':''}" onclick="toggleMetro()">${metro.playing?'⏹ 停止':'▶ スタート'}</button></div>`;
+  }
   return h;
-}
-
-function renderMetro(){
-  let dots='';
-  for(let i=0;i<metro.bpb;i++){
-    const isFirst=i===0;
-    const isActive=metro.playing&&metro.beat===i;
-    const cls=`beat-dot ${isFirst?'first':'other'}${isActive?(isFirst?' active-first':' active-other'):''}`;
-    dots+=`<div class="${cls}"></div>`;
-  }
-  return `<div class="card" style="text-align:center">
-    <div class="card-label">🎵 メトロノーム</div>
-    <div class="beats">${dots}</div>
-    <div class="bpm-num">${metro.bpm}</div>
-    <div class="bpm-lbl">BPM</div>
-    <input type="range" min="30" max="240" value="${metro.bpm}" oninput="setBpm(this.value)">
-    <div class="chips" style="justify-content:center;margin-bottom:14px">${[40,60,72,80,100,120,144,180].map(v=>`<button class="chip-btn${metro.bpm===v?' active':''}" onclick="setBpm(${v})">${v}</button>`).join('')}</div>
-    <div style="display:flex;justify-content:center;align-items:center;gap:8px;margin-bottom:20px">
-      <span class="muted small">拍子</span>
-      ${[2,3,4,6].map(v=>`<button class="chip-btn${metro.bpb===v?' active':''}" onclick="setBpb(${v})">${v}拍</button>`).join('')}
-    </div>
-    <button class="btn${metro.playing?' btn-red':''}" onclick="toggleMetro()">${metro.playing?'⏹ 停止':'▶ スタート'}</button>
-  </div>`;
 }
 
 // ============================================================
 // Actions
 // ============================================================
-function switchMode(m){
-  mode=m;tView='list';sView='home';selStudent=null;
-  document.querySelectorAll('.tab-bar .tab-btn').forEach((b,i)=>b.classList.toggle('active',i===(m==='teacher'?0:1)));
-  r();
-}
-function selectStudent(id){selStudent=DB.students.find(s=>s.id===id);tView='detail';tTab='lesson';lf={date:today(),song:'',scores:initScores(selStudent.instrument),comment:''};r();}
-function addStudent(){
-  const name=document.getElementById('newName').value.trim();
-  if(!name)return;
-  DB.students.push({id:uid(),name,instrument:newInst,since:new Date().toISOString().slice(0,7)});
-  newName='';save(DB);r();
-}
-function addLesson(){
-  if(!lf.song.trim())return;
-  DB.lessons.push({id:uid(),sid:selStudent.id,...lf});
-  lf={date:today(),song:'',scores:initScores(selStudent.instrument),comment:''};
-  save(DB);r();
-}
-function addVideo(){
-  if(!vf.song.trim())return;
-  DB.videos.push({id:uid(),sid:selStudent.id,...vf});
-  vf={month:todayMonth(),song:'',scores:{overall:3,technique:3,musicality:3,presence:3},comment:''};
-  save(DB);r();
-}
-function addHomework(){
-  if(!hw.task.trim())return;
-  DB.homeworks.push({id:uid(),sid:selStudent.id,setDate:today(),...hw,done:false});
-  hw={task:'',dueDate:''};save(DB);r();
-}
-function addPractice(){
-  if(!pf.content.trim())return;
-  DB.practices.push({id:uid(),sid:selStudent.id,...pf});
-  pf={date:today(),minutes:30,content:'',mood:3,note:''};
-  save(DB);r();
-}
-function toggleHw(id){
-  const h=DB.homeworks.find(x=>x.id===id);
-  if(h){h.done=!h.done;save(DB);r();}
-}
-
-// Star setters - generated dynamically
-function setLScore_pitch(v){lf.scores.pitch=v;r();}
-function setLScore_rhythm(v){lf.scores.rhythm=v;r();}
-function setLScore_sight(v){lf.scores.sight=v;r();}
-function setLScore_expression(v){lf.scores.expression=v;r();}
-function setLScore_posture(v){lf.scores.posture=v;r();}
-function setLScore_bowing(v){lf.scores.bowing=v;r();}
-function setLScore_tone(v){lf.scores.tone=v;r();}
-function setLScore_tonguing(v){lf.scores.tonguing=v;r();}
-function setLScore_breath(v){lf.scores.breath=v;r();}
-function setLScore_voice(v){lf.scores.voice=v;r();}
-function setLScore_diction(v){lf.scores.diction=v;r();}
-function setLScore_attitude(v){lf.scores.attitude=v;r();}
-function setVScore_overall(v){vf.scores.overall=v;r();}
-function setVScore_technique(v){vf.scores.technique=v;r();}
-function setVScore_musicality(v){vf.scores.musicality=v;r();}
-function setVScore_presence(v){vf.scores.presence=v;r();}
-
-// Metronome
-function playClick(accent){
-  try{
-    if(!metro.ctx) metro.ctx=new(window.AudioContext||window.webkitAudioContext)();
-    const ctx=metro.ctx;
-    const osc=ctx.createOscillator(),gain=ctx.createGain();
-    osc.connect(gain);gain.connect(ctx.destination);
-    osc.frequency.value=accent?1200:800;
-    gain.gain.setValueAtTime(accent?0.6:0.3,ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.08);
-    osc.start(ctx.currentTime);osc.stop(ctx.currentTime+0.1);
-  }catch(e){}
-}
+function switchMode(m){mode=m;tView='list';sView='home';selStudent=null;if(audioTimer.active)stopAudioTimer();document.querySelectorAll('.tab-bar .tab-btn').forEach((b,i)=>b.classList.toggle('active',i===(m==='teacher'?0:1)));r();}
+function selectStudent(id){selStudent=DB.students.find(s=>s.id===id);tView='detail';tTab=selStudent.plan==='pro'?'lesson':'scores';lf={date:today(),advice:''};r();}
+function addStudent(){const name=document.getElementById('newName').value.trim();if(!name)return;DB.students.push({id:uid(),name,instrument:newInst,since:new Date().toISOString().slice(0,7),plan:newPlan});newName='';save(DB);r();}
+function addLesson(){if(!lf.advice.trim())return;DB.lessons.push({id:uid(),sid:selStudent.id,...lf});lf={date:today(),advice:''};save(DB);r();}
+function addHomework(){if(!hw.task.trim())return;DB.homeworks.push({id:uid(),sid:selStudent.id,setDate:today(),...hw,done:false});hw={task:'',dueDate:''};save(DB);r();}
+function addPractice(){if(!pf.content.trim())return;DB.practices.push({id:uid(),sid:selStudent.id,...pf});pf={date:today(),minutes:30,content:'',mood:3,note:''};save(DB);r();}
+function toggleHw(id){const h=DB.homeworks.find(x=>x.id===id);if(h){h.done=!h.done;save(DB);r();}}
+function playClick(accent){try{if(!metro.ctx)metro.ctx=new(window.AudioContext||window.webkitAudioContext)();const ctx=metro.ctx;const osc=ctx.createOscillator(),gain=ctx.createGain();osc.connect(gain);gain.connect(ctx.destination);osc.frequency.value=accent?1200:800;gain.gain.setValueAtTime(accent?0.6:0.3,ctx.currentTime);gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.08);osc.start(ctx.currentTime);osc.stop(ctx.currentTime+0.1);}catch(e){}}
 function setBpm(v){metro.bpm=parseInt(v);if(metro.playing){clearInterval(metro.interval);startMetroLoop();}r();}
 function setBpb(v){metro.bpb=v;metro.beat=0;if(metro.playing){clearInterval(metro.interval);metro.playing=false;}r();}
-function startMetroLoop(){
-  metro.beat=0;playClick(true);
-  metro.interval=setInterval(()=>{
-    metro.beat=(metro.beat+1)%metro.bpb;
-    playClick(metro.beat===0);
-    const dots=document.querySelectorAll('.beat-dot');
-    dots.forEach((d,i)=>{
-      d.classList.remove('active-first','active-other');
-      if(i===metro.beat) d.classList.add(i===0?'active-first':'active-other');
-    });
-  },(60/metro.bpm)*1000);
-}
-function toggleMetro(){
-  if(metro.playing){clearInterval(metro.interval);metro.playing=false;metro.beat=0;}
-  else{metro.playing=true;startMetroLoop();}
-  r();
-}
-
-// ============================================================
-// Init
-// ============================================================
+function startMetroLoop(){metro.beat=0;playClick(true);metro.interval=setInterval(()=>{metro.beat=(metro.beat+1)%metro.bpb;playClick(metro.beat===0);const dots=document.querySelectorAll('.beat-dot');dots.forEach((d,i)=>{d.classList.remove('active-first','active-other');if(i===metro.beat)d.classList.add(i===0?'active-first':'active-other');});},(60/metro.bpm)*1000);}
+function toggleMetro(){if(metro.playing){clearInterval(metro.interval);metro.playing=false;metro.beat=0;}else{metro.playing=true;startMetroLoop();}r();}
 r();
+// Animate score after render if showing report
+setTimeout(()=>{if(audioTimer.showReport&&audioTimer.reportData&&DB.settings.showScore)animateKaraokeScore(audioTimer.reportData.score);},100);
 </script>
 </body>
 </html>
