@@ -86,6 +86,10 @@ textarea.inp{resize:none;height:64px;}
 /* Progress */
 .prog-bar{height:10px;border-radius:5px;background:#1a1a2e;margin:8px 0;overflow:hidden;}
 .prog-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,#ff8906,#f25f4c);transition:width .8s ease;}
+/* Song completion */
+.song-prog-bar{height:8px;border-radius:4px;background:#0f0e17;margin:6px 0;overflow:hidden;}
+.song-prog-fill{height:100%;border-radius:4px;transition:width .6s ease;}
+.completion-badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700;}
 
 /* Stamps */
 .stamp-grid{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0;}
@@ -229,11 +233,11 @@ svg text{font-family:'Hiragino Sans','Noto Sans JP',sans-serif;}
     <button class="nav-btn" onclick="showTab('practice')" id="nav-practice">
       <span class="nav-icon">🎤</span>練習
     </button>
+    <button class="nav-btn" onclick="showTab('songs')" id="nav-songs">
+      <span class="nav-icon">🎼</span>曲目
+    </button>
     <button class="nav-btn" onclick="showTab('growth')" id="nav-growth">
       <span class="nav-icon">📊</span>成長
-    </button>
-    <button class="nav-btn" onclick="showTab('stamp')" id="nav-stamp">
-      <span class="nav-icon">💮</span>スタンプ
     </button>
     <button class="nav-btn" onclick="showTab('metro')" id="nav-metro">
       <span class="nav-icon">🎵</span>テンポ
@@ -303,7 +307,7 @@ function obSkip(){
   startApp();
 }
 function initDB(name,inst,emoji){
-  DB={name,instrument:inst,emoji,since:new Date().toISOString().slice(0,7),practices:[],aiScores:[],settings:{showScore:true}};
+  DB={name,instrument:inst,emoji,since:new Date().toISOString().slice(0,7),practices:[],aiScores:[],songs:[],settings:{showScore:true}};
   save(DB);
 }
 function startApp(){
@@ -342,6 +346,7 @@ function renderTab(tab){
   const el=document.getElementById('app-content');
   if(tab==='home') el.innerHTML=renderHome();
   else if(tab==='practice') el.innerHTML=renderPractice();
+  else if(tab==='songs') el.innerHTML=renderSongs();
   else if(tab==='growth') el.innerHTML=renderGrowth();
   else if(tab==='stamp') el.innerHTML=renderStamp();
   else if(tab==='metro') el.innerHTML=renderMetro();
@@ -496,6 +501,150 @@ function renderReport(d){
     <div style="text-align:center;font-size:18px;font-weight:800;color:#ff8906;margin:14px 0">💮 スタンプ獲得！</div>
     <button class="btn" onclick="closeReport()">次の練習へ</button>
   </div>`;
+}
+
+// ============================================================
+// Render: Songs
+// ============================================================
+let sf={title:'',composer:'',status:'練習中',completion:0,memo:''};
+
+function renderSongs(){
+  const songs=DB.songs||[];
+  
+  function completionColor(pct){
+    if(pct>=100) return '#ff8906';
+    if(pct>=70) return '#f25f4c';
+    if(pct>=40) return '#e53170';
+    return '#a7a9be';
+  }
+  function statusEmoji(s){return s==='完成'?'🏆':s==='練習中'?'🎯':s==='復習中'?'🔄':'📖';}
+
+  let h=`
+  <div class="card card-accent">
+    <div class="card-label">🎼 曲を追加する</div>
+    <input class="inp" placeholder="曲名（例：ソナタ Op.13）" value="${sf.title}" oninput="sf.title=this.value">
+    <input class="inp" style="margin-top:8px" placeholder="作曲家（任意）" value="${sf.composer}" oninput="sf.composer=this.value">
+    <div style="margin-top:12px">
+      <div class="muted small" style="margin-bottom:8px">ステータス</div>
+      <div class="chips">
+        ${['練習中','復習中','完成'].map(s=>`<button class="chip${sf.status===s?' active':''}" onclick="sf.status='${s}';renderTab('songs')">${statusEmoji(s)} ${s}</button>`).join('')}
+      </div>
+    </div>
+    <div style="margin-top:12px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+        <span class="muted small">完成度</span>
+        <span style="font-size:13px;font-weight:700;color:#ff8906">${sf.completion}%</span>
+      </div>
+      <input type="range" min="0" max="100" value="${sf.completion}" oninput="sf.completion=parseInt(this.value);document.getElementById('sf-prog').style.width=this.value+'%';document.getElementById('sf-pct').textContent=this.value+'%'">
+      <div class="song-prog-bar"><div class="song-prog-fill" id="sf-prog" style="width:${sf.completion}%;background:${completionColor(sf.completion)}"></div></div>
+    </div>
+    <textarea class="inp" style="margin-top:8px;height:52px" placeholder="今日の気づき・メモ（任意）" oninput="sf.memo=this.value">${sf.memo}</textarea>
+    <button class="btn" onclick="addSong()">曲を追加</button>
+  </div>`;
+
+  if(songs.length===0){
+    h+=`<div class="card" style="text-align:center;padding:32px 16px">
+      <div style="font-size:40px;margin-bottom:12px">🎼</div>
+      <div style="color:#a7a9be;font-size:14px">練習している曲を登録しよう！<br>完成度が育っていく物語になります</div>
+    </div>`;
+    return h;
+  }
+
+  // Sort: 練習中 first, then 復習中, then 完成
+  const order={練習中:0,復習中:1,完成:2};
+  const sorted=[...songs].sort((a,b)=>(order[a.status]||0)-(order[b.status]||0));
+
+  sorted.forEach(s=>{
+    const color=completionColor(s.completion);
+    const history=s.history||[];
+    const latest=history[history.length-1];
+    h+=`<div class="card" style="border-color:${s.completion>=100?'#ff8906':'#2a2a4a'}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+        <div style="flex:1">
+          <div style="font-weight:800;font-size:15px">${s.title}</div>
+          ${s.composer?`<div style="font-size:11px;color:#555577;margin-top:2px">${s.composer}</div>`:''}
+        </div>
+        <span style="font-size:11px;padding:3px 10px;border-radius:20px;background:#0f0e17;color:${color};border:1px solid ${color};white-space:nowrap;margin-left:8px">${statusEmoji(s.status)} ${s.status}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <span style="font-size:12px;color:#a7a9be">完成度</span>
+        <span style="font-size:16px;font-weight:900;color:${color}">${s.completion}%</span>
+      </div>
+      <div class="song-prog-bar"><div class="song-prog-fill" style="width:${s.completion}%;background:${color}"></div></div>
+      ${latest?`<div style="font-size:11px;color:#555577;margin-top:6px">📝 ${latest.date}：${latest.memo||'記録あり'}</div>`:''}
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="chip" onclick="updateSong('${s.id}')" style="flex:1;text-align:center">✏️ 更新</button>
+        <button class="chip" onclick="deleteSong('${s.id}')" style="color:#f25f4c;border-color:#f25f4c">🗑</button>
+      </div>
+    </div>`;
+  });
+
+  return h;
+}
+
+function addSong(){
+  if(!sf.title.trim()){alert('曲名を入力してください');return;}
+  if(!DB.songs) DB.songs=[];
+  DB.songs.push({id:uid(),title:sf.title,composer:sf.composer,status:sf.status,completion:sf.completion,history:sf.memo?[{date:today(),completion:sf.completion,memo:sf.memo}]:[]});
+  sf={title:'',composer:'',status:'練習中',completion:0,memo:''};
+  save(DB);
+  showToast('🎼 曲を追加しました！');
+  renderTab('songs');
+}
+
+let editingSongId=null;
+function updateSong(id){
+  const song=DB.songs.find(s=>s.id===id);
+  if(!song)return;
+  editingSongId=id;
+  // Show update modal
+  const overlay=document.createElement('div');
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:200;display:flex;align-items:flex-end;justify-content:center;padding:20px;';
+  overlay.innerHTML=`<div style="background:#1a1a2e;border-radius:20px 20px 0 0;padding:24px;width:100%;max-width:480px;border:1px solid #2a2a4a">
+    <div style="font-size:16px;font-weight:800;margin-bottom:16px">✏️ ${song.title} を更新</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <span class="muted small">完成度</span>
+      <span id="modal-pct" style="font-size:16px;font-weight:900;color:#ff8906">${song.completion}%</span>
+    </div>
+    <input type="range" min="0" max="100" value="${song.completion}" oninput="document.getElementById('modal-pct').textContent=this.value+'%';document.getElementById('modal-bar').style.width=this.value+'%'" id="modal-slider">
+    <div class="song-prog-bar"><div class="song-prog-fill" id="modal-bar" style="width:${song.completion}%;background:#ff8906"></div></div>
+    <div style="margin-top:12px">
+      <div class="muted small" style="margin-bottom:8px">ステータス</div>
+      <div style="display:flex;gap:8px">
+        ${['練習中','復習中','完成'].map(s=>`<button onclick="this.parentElement.querySelectorAll('button').forEach(b=>b.style.borderColor='#2a2a4a');this.style.borderColor='#ff8906'" style="flex:1;padding:8px;background:#0f0e17;border:1px solid ${song.status===s?'#ff8906':'#2a2a4a'};border-radius:8px;color:#fffffe;font-size:12px;cursor:pointer" data-status="${s}">${s}</button>`).join('')}
+      </div>
+    </div>
+    <textarea id="modal-memo" class="inp" style="margin-top:12px;height:52px" placeholder="今日の気づき・メモ"></textarea>
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <button onclick="this.closest('div[style*=fixed]').remove()" style="flex:1;padding:12px;background:#0f0e17;border:1px solid #2a2a4a;border-radius:10px;color:#a7a9be;cursor:pointer">キャンセル</button>
+      <button onclick="saveSongUpdate('${id}',this.closest('div[style*=fixed]'))" style="flex:2;padding:12px;background:linear-gradient(135deg,#ff8906,#f25f4c);border:none;border-radius:10px;color:#fffffe;font-weight:700;cursor:pointer">保存する</button>
+    </div>
+  </div>`;
+  document.body.appendChild(overlay);
+}
+
+function saveSongUpdate(id,overlay){
+  const song=DB.songs.find(s=>s.id===id);
+  if(!song)return;
+  const slider=document.getElementById('modal-slider');
+  const memo=document.getElementById('modal-memo').value;
+  const statusBtn=overlay.querySelector('button[data-status][style*="ff8906"]');
+  song.completion=parseInt(slider.value);
+  if(statusBtn) song.status=statusBtn.dataset.status;
+  if(song.completion>=100) song.status='完成';
+  if(!song.history) song.history=[];
+  song.history.push({date:today(),completion:song.completion,memo});
+  save(DB);
+  overlay.remove();
+  showToast('✅ 更新しました！');
+  renderTab('songs');
+}
+
+function deleteSong(id){
+  if(!confirm('この曲を削除しますか？')) return;
+  DB.songs=DB.songs.filter(s=>s.id!==id);
+  save(DB);
+  renderTab('songs');
 }
 
 // ============================================================
