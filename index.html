@@ -179,11 +179,15 @@ svg text{font-family:'Hiragino Sans','Noto Sans JP',sans-serif;}
       <div class="ob-dot"></div>
     </div>
     <div class="ob-instruments" id="ob-inst-grid">
-      ${[
-        ['🎹','ピアノ'],['🎻','バイオリン'],['🎸','ギター'],
-        ['🎺','管楽器'],['🎤','ボーカル'],['🎷','サックス'],
-        ['🥁','ドラム'],['🎸','ベース'],['🎵','その他']
-      ].map(([e,n],i)=>`<div class="ob-inst" onclick="selectInst('${n}','${e}',this)"><span class="ob-inst-emoji">${e}</span><span class="ob-inst-name">${n}</span></div>`).join('')}
+      <div class="ob-inst" onclick="selectInst('ピアノ','🎹',this)"><span class="ob-inst-emoji">🎹</span><span class="ob-inst-name">ピアノ</span></div>
+      <div class="ob-inst" onclick="selectInst('バイオリン','🎻',this)"><span class="ob-inst-emoji">🎻</span><span class="ob-inst-name">バイオリン</span></div>
+      <div class="ob-inst" onclick="selectInst('ギター','🎸',this)"><span class="ob-inst-emoji">🎸</span><span class="ob-inst-name">ギター</span></div>
+      <div class="ob-inst" onclick="selectInst('管楽器','🎺',this)"><span class="ob-inst-emoji">🎺</span><span class="ob-inst-name">管楽器</span></div>
+      <div class="ob-inst" onclick="selectInst('ボーカル','🎤',this)"><span class="ob-inst-emoji">🎤</span><span class="ob-inst-name">ボーカル</span></div>
+      <div class="ob-inst" onclick="selectInst('サックス','🎷',this)"><span class="ob-inst-emoji">🎷</span><span class="ob-inst-name">サックス</span></div>
+      <div class="ob-inst" onclick="selectInst('ドラム','🥁',this)"><span class="ob-inst-emoji">🥁</span><span class="ob-inst-name">ドラム</span></div>
+      <div class="ob-inst" onclick="selectInst('ベース','🎸',this)"><span class="ob-inst-emoji">🎸</span><span class="ob-inst-name">ベース</span></div>
+      <div class="ob-inst" onclick="selectInst('その他','🎵',this)"><span class="ob-inst-emoji">🎵</span><span class="ob-inst-name">その他</span></div>
     </div>
     <button class="ob-btn" id="ob-btn-2" onclick="obNext(2)" disabled>次へ →</button>
   </div>
