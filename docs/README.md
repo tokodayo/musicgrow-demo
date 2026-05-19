@@ -6,8 +6,13 @@
 
 | ファイル | 内容 |
 |---|---|
-| [DESIGN_today_one_word.md](./DESIGN_today_one_word.md) | 機能の全体設計書（コンセプト、データ構造、フロー、楽器対応戦略、実装フェーズ） |
-| [PLACEHOLDER_DATA.md](./PLACEHOLDER_DATA.md) | プレースホルダー文の台帳（中立版90文、トーン別） |
+| [DESIGN_today_one_word.md](./DESIGN_today_one_word.md) | 機能の全体設計書 |
+| [PLACEHOLDER_DATA.md](./PLACEHOLDER_DATA.md) | プレースホルダー文の台帳 |
+| [AI_READINESS.md](./AI_READINESS.md) | AI連携の設計指針 |
+| [MONETIZATION.md](./MONETIZATION.md) | マネタイズ方針 |
+| [CHANGELOG_v2.md](./CHANGELOG_v2.md) | v2への変更履歴 |# ファイル構成
+
+
 
 ## 機能の一行サマリ
 
